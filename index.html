@@ -16,20 +16,23 @@
             margin: 0;
             padding: 20px;
             color: white; /* Letter color */
+            overflow: hidden; /* Hide scrollbars */
         }
         #letter {
             font-size: 24px;
             line-height: 1.5;
             text-align: center;
+            position: relative; /* For positioning child elements */
+            width: 100%; /* Full width */
         }
         .line {
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            position: absolute; /* Overlay lines */
+            width: 100%; /* Full width for centering */
+            transition: opacity 0.5s ease;
         }
         .line.visible {
             opacity: 1;
-            transform: translateY(0);
         }
     </style>
 </head>
@@ -80,8 +83,17 @@
                 lineDiv.classList.add('visible');
             }, 100); // Small delay before adding the visible class
 
+            // Calculate delay based on line length
+            const lineLength = letter[lineIndex].length;
+            const delay = lineLength > 60 ? 6000 : (lineLength > 30 ? 4000 : 3000); // Adjust these values as needed
+
+            // Fade out the current line before fading in the next one
+            setTimeout(() => {
+                lineDiv.classList.remove('visible');
+            }, delay - 1000); // Start fading out before the delay ends
+
             lineIndex++;
-            setTimeout(displayLine, 4000); // Change this for delay between lines
+            setTimeout(displayLine, delay); // Use dynamic delay based on line length
         } else {
             // Redirect after the last line is displayed
             setTimeout(() => {
@@ -90,7 +102,9 @@
         }
     }
 
-    displayLine();
+    // Add a longer delay before starting to display the letter
+    setTimeout(displayLine, 6000); // Change 6000 to desired delay in milliseconds
+
 </script>
 
 </body>
